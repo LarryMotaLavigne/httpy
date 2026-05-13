@@ -2,7 +2,7 @@
 # Based on: https://alex-moss.medium.com/creating-an-up-to-date-python-distroless-container-image-e3da728d7a80
 
 # Stage 1: Build dependencies
-FROM python:3.9-slim as builder
+FROM registry.gitlab.ggcorp.fr/internal/docker-cache/python:3.9-slim as builder
 WORKDIR /app
 
 # Install build dependencies
@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip wheel --no-cache-dir --wheel-dir /wheels -e .
 
 # Stage 2: Copy application code
-FROM python:3.9-slim as app-image
+FROM registry.gitlab.ggcorp.fr/internal/docker-cache/python:3.9-slim as app-image
 WORKDIR /app
 
 # Copy wheels from builder stage
@@ -32,7 +32,7 @@ COPY httpy/ /app/httpy/
 COPY examples/ /app/examples/
 
 # Stage 3: Final distroless image
-FROM gcr.io/distroless/python3-debian12
+FROM registry.gitlab.ggcorp.fr/internal/docker-cache/distroless/python3-debian12
 WORKDIR /app
 
 # Copy wheels and application code from previous stages
